@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Do You Wanna</title>
+    <link rel="stylesheet" href="DoYouWanna.css">
+
+    <script src="DoYouWanna.js"></script>
+
+</head>
+<body id="game-container">
+    <div id="game-content">
+        <div id="glitch"></div>
+            <div class="typewriter">
+            
+                <h1 id="chapitre"></h1>
+
+                <div id="intro">
+                    <img id="gif-cat" src="img/gifCat.gif" style="display:none;">
+                    <button class="fill" id="start-button" onclick="demarrerEtape(1)">Commencer</button>
+                </div>
+
+
+                <div id="dialogue-container" style="display:none;"> 
+                    <div id="dialogue" onclick="continuerDialogue()"> 
+                        <p id="text"></p>
+                        <div id="choices"></div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    
+</body>
+
+
+
+
+
+</html>
