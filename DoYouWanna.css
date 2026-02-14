@@ -186,6 +186,15 @@ button {
     display: block;
 }
 
+#intro #intro-text {
+  color: #fff;
+  max-width: 800px;
+  margin: 18px auto 10px auto;
+  font-size: 1.05rem;
+  line-height: 1.4;
+  text-align: center;
+}
+
 #gif-cat {
     filter: contrast(120%) brightness(1.1) saturate(1.2);
     position: absolute;
@@ -259,6 +268,12 @@ button {
   z-index: 10;
   display: none; /* contrôlé par JS */
   pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+
+  /* (character image styles moved to global scope) */
 }
 
 #dialogue {
@@ -309,3 +324,234 @@ button {
 
 /* Assure que le calque glitch reste derrière le dialogue et le chapitre */
 #glitch { z-index: 3; }
+
+/* Image du personnage positionnée juste au-dessus du dialogue */
+#character-img {
+  position: absolute; /* relatif à #dialogue-container */
+  bottom: calc(100% + 6px);
+  width: 300px;
+  max-width: 36vw;
+  height: auto;
+  pointer-events: none;
+  transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+  opacity: 1;
+  transform: none;
+  z-index: 11; /* au-dessus du dialogue */
+}
+
+/* Positionnements spécifiques selon le côté */
+#character-img.left {
+  left: 12px;      /* collé à gauche inside container */
+  right: auto;
+  bottom: calc(100% - 20px );
+}
+
+#character-img.right {
+  right: 12px;     /* collé à droite inside container */
+  left: auto;
+  bottom: calc(100% - 20px ); /* plus collée au dialogue */
+}
+
+/* Quand l'image est cachée, la rendre transparente */
+#character-img[style*="display: none"] {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.99);
+}
+
+/* Responsive: réduire sur petit écran */
+@media (max-width: 700px) {
+  #character-img {
+    width: 220px;
+    max-width: 48vw;
+  }
+  #character-img.left { left: 8px; }
+  #character-img.right { right: 8px; bottom: calc(100% + 4px); }
+}
+
+/* ----- Styles pour le mini‑jeu / overlay ----- */
+#minigame-overlay {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.95); /* écran très lumineux */
+  z-index: 30;
+  flex-direction: column;
+  gap: 18px;
+}
+
+#minigame-line {
+  margin-top: 8vh;
+}
+
+#minigame-line .minigame-speaker {
+  font-size: 1.15rem;
+  color: #222;
+}
+
+#minigame-gifzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+#minigame-gif {
+  width: 420px;
+  max-width: 70vw;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+  cursor: pointer;
+}
+
+#minigame-caption {
+  color: #222;
+  font-size: 1.05rem;
+}
+
+#minigame-letter {
+  width: 220px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+/* proposal modal */
+#proposal-modal {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.proposal-box {
+  background: #fff;
+  padding: 24px 30px;
+  border-radius: 12px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.25);
+  text-align: center;
+}
+.proposal-box h2 {
+  margin: 0 0 12px 0;
+  color: #ff69b4;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  font-size: 1.6rem;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+.proposal-buttons { display:flex; gap:12px; justify-content:center; }
+
+/* explode animation for the 'Non' button */
+@keyframes explodeAnim {
+  0% { transform: scale(1) rotate(0deg); opacity: 1; }
+  60% { transform: scale(1.6) rotate(16deg); opacity: 1; }
+  100% { transform: scale(0) rotate(90deg); opacity: 0; }
+}
+.proposal-buttons .no.explode {
+  animation: explodeAnim 0.7s ease-out forwards;
+}
+
+/* écran shake */
+@keyframes screen-shake {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-6px, 0); }
+  40% { transform: translate(6px, 0); }
+  60% { transform: translate(-3px, 0); }
+  80% { transform: translate(2px, 0); }
+  100% { transform: translate(0, 0); }
+}
+.shake {
+  animation: screen-shake 0.45s cubic-bezier(.36,.07,.19,.97);
+}
+
+/* End screen overlay */
+#end-overlay {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 18px;
+  background: rgba(0,0,0,0.6);
+  z-index: 80;
+}
+#end-image {
+  max-width: 80vw;
+  border-radius: 8px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+}
+#end-overlay > button.fill {
+  margin-top: 12px;
+  padding: 12px 28px;
+}
+
+/* Dim overlay used before shake/mini-game */
+#dim-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  opacity: 0;
+  transition: opacity 0.32s ease-in-out;
+  display: none;
+  z-index: 24; /* below minigame (30) but above background */
+}
+
+
+/* --- Effets pour le "Vrai Réveil" --- */
+
+#black-screen {
+  position: fixed;
+  inset: 0;
+  background: black;
+  opacity: 0;
+  z-index: 999; /* Au-dessus de tout le reste */
+  pointer-events: none;
+  display: none;
+  /* On utilise flexbox pour centrer parfaitement le texte au milieu de l'écran */
+  align-items: center;
+  justify-content: center;
+}
+
+#wake-up-text {
+  color: white;
+  font-family: 'VT323', monospace; /* Utilise la même police pixelisée que le reste */
+  font-size: 2.5rem;
+  opacity: 0;
+  transition: opacity 1s ease-in-out; /* Pour un fondu d'apparition doux */
+}
+
+/* L'animation de tremblement nerveux pour le texte */
+@keyframes text-tremble {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(1px, -2px); }
+  60% { transform: translate(-1px, 2px); }
+  80% { transform: translate(2px, -1px); }
+  100% { transform: translate(0, 0); }
+}
+
+.tremble-active {
+  animation: text-tremble 0.1s infinite;
+}
+
+/* L'animation de tremblement brutal pour l'écran au réveil */
+@keyframes violent-shake {
+  0% { transform: translate(0, 0) scale(1.02); }
+  10% { transform: translate(-15px, 10px) scale(1.02); }
+  20% { transform: translate(20px, -10px) scale(1.02); }
+  30% { transform: translate(-20px, -15px) scale(1.02); }
+  40% { transform: translate(15px, 20px) scale(1.02); }
+  50% { transform: translate(-10px, -20px) scale(1.02); }
+  60% { transform: translate(20px, 10px) scale(1.02); }
+  70% { transform: translate(-15px, 15px) scale(1.02); }
+  80% { transform: translate(10px, -10px) scale(1.02); }
+  90% { transform: translate(-10px, 10px) scale(1.02); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+.violent-shake {
+  animation: violent-shake 1s cubic-bezier(.36,.07,.19,.97);
+}
